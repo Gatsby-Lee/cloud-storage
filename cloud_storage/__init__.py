@@ -1,6 +1,6 @@
-from cloud_storage.gcs_helper import GoogleCloudStorageHelper
+from cloud_storage.gcs_storage import GoogleCloudStorage
 
 
 __all__ = (
-    'GoogleCloudStorageHelper',
+    'GoogleCloudStorage',
 )

@@ -1,6 +1,13 @@
 CHANGES ( Latest to Oldest )
 ============================
 
+v1.1.0
+------
+
+- Simplify Function Names
+- Change blob_name to object_key
+- Add exception handling & raise new exception\
+- Remove storage_class parameters
 
 v1.0.0
 ------
