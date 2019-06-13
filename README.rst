@@ -6,7 +6,7 @@ Installation
 
 .. code-block:: bash
 
-    pip install cloud_storage
+    pip install cloud-storage
 
 
 How to use
