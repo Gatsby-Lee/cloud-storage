@@ -18,12 +18,12 @@ Usage
 Functions
 ---------
 
-list_buckets()
+list_buckets
 ~~~~~~~~~~~~~~
 
 Returns list of all buckets
 
-upload_blob_from_file(bucket_name, source_file_name, destination_blob_name, content_type, content_encoding, storage_class)
+upload_blob_from_file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Upload a file into the cloud
@@ -39,7 +39,7 @@ Upload a file into the cloud
     "content_encoding", "Encoding used for uploading content", No, "String", "gzip", ""
     "storage_class", "", No, "String", "", ""
 
-upload_blob_from_string(bucket_name, buffer, destination_blob_name, content_type, content_encoding, storage_class)
+upload_blob_from_string
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Upload a string into the cloud
@@ -55,7 +55,7 @@ Upload a string into the cloud
     "content_encoding", "Encoding used for uploading content", No, "String", "gzip", ""
     "storage_class", "", No, "String", "", ""
 
-get_blob_exists(bucket_name, source_blob_name)
+get_blob_exists
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Returns True/False whether an object key get_blob_exists
@@ -67,7 +67,7 @@ Returns True/False whether an object key get_blob_exists
     "bucket_name", "Name of bucket", "Yes", "String"
     "source_blob_name", "Object key in Cloud", "Yes", "String", "", ""
 
-rename_blob(bucket_name, blob_name, new_blob_name)
+rename_blob
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Renames an object key
@@ -80,7 +80,7 @@ Renames an object key
     "blob_name", "Object key in Cloud", "Yes", "String", "", ""
     "new_blob_name", "New object key to be renamed to", "Yes", "String", "", ""
 
-download_blob_to_file(bucket_name, source_blob_name, destination_file_name)
+download_blob_to_file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Downloads content and save to file
 
@@ -92,7 +92,7 @@ Downloads content and save to file
     "source_blob_name", "Object key in Cloud", "Yes", "String", "", ""
     "destination_file_name", "File Path to save content to", "Yes", "String", "", ""
 
-download_blob_as_string(bucket_name, source_blob_name)
+download_blob_as_string
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Returns content from an object key
@@ -104,7 +104,7 @@ Returns content from an object key
     "bucket_name", "Name of bucket", "Yes", "String"
     "source_blob_name", "Object key in Cloud", "Yes", "String", "", ""
 
-delete_blob(bucket_name, blob_name)
+delete_blob
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Delete an object key from cloud
