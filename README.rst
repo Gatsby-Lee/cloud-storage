@@ -1,5 +1,6 @@
 Cloud Storage
 =============
+
 Installation
 ------------
 
@@ -7,13 +8,15 @@ Installation
 
     pip install cloud_storage
 
-Usage
------
 
-.. code-block:: bash
+How to use
+----------
+
+.. code-block:: python
 
     from cloud_storage import GoogleCloudStorageHelper
     google_cloud_storage_helper = GoogleCloudStorageHelper()
+
 
 Functions
 ---------
