@@ -14,6 +14,5 @@ How to use
 
 .. code-block:: python
 
-    from cloud_storage import GoogleCloudStorageHelper
-    google_cloud_storage_helper = GoogleCloudStorageHelper()
-
+    >>> from cloud_storage import GoogleCloudStorage
+    >>> storage = GoogleCloudStorage()
