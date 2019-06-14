@@ -6,20 +6,25 @@
 """
 
 
-class UploadBadRequestException(Exception):
+class CloudStorageBadRequestException(Exception):
     pass
 
 
-class UploadServerErrorException(Exception):
+class CloudStorageInvalidArgumentTypeException(Exception):
     pass
 
 
-class UploadUnknownErrorException(Exception):
+class CloudStorageServerErrorException(Exception):
+    pass
+
+
+class CloudStorageUnknownErrorException(Exception):
     pass
 
 
 __all__ = (
-    'UploadBadRequestException',
-    'UploadServerErrorException',
-    'UploadUnknownErrorException',
+    'CloudStorageBadRequestException',
+    'CloudStorageInvalidArgumentTypeException',
+    'CloudStorageServerErrorException',
+    'CloudStorageUnknownErrorException',
 )
