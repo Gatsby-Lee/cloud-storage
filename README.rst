@@ -1,3 +1,6 @@
+.. image:: https://badge.fury.io/py/cloud-storage.svg
+    :target: https://badge.fury.io/py/cloud-storage
+
 =============
 Cloud Storage
 =============
