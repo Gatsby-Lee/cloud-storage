@@ -3,6 +3,8 @@ from setuptools import setup, find_packages
 from codecs import open  # To use a consistent encoding
 from os import path
 
+from cloud_storage import __version__
+
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
@@ -16,7 +18,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version='1.1.0',
+    version=__version__,
 
     description='Cloud Storage',
     long_description=long_description,
