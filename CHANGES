@@ -1,6 +1,13 @@
 CHANGES ( Latest to Oldest )
 ============================
 
+v1.2.0
+------
+
+- Added storage factory in cloud_storage.client
+- Moved GoogleCloudStorage in cloud_storage.__init__.py to cloud_storage.client.py
+
+
 v1.1.0
 ------
 
