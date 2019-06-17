@@ -1,8 +1,8 @@
-from cloud_storage.gcs_storage import GoogleCloudStorage
+def int_or_str(value):
+    try:
+        return int(value)
+    except ValueError:
+        return value
 
-__version__ = '1.1.0'
+__version__ = '1.2.0'
 VERSION = tuple(map(int_or_str, __version__.split('.')))
-
-__all__ = (
-    'GoogleCloudStorage',
-)
