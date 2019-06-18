@@ -1,6 +1,13 @@
 CHANGES ( Latest to Oldest )
 ============================
 
+v1.3.0
+------
+
+- Moved back GoogleCloudStorage in cloud_storage.client.py to cloud_storage.__init__.py
+- Add version into info cloud_storage.__about__.py
+
+
 v1.2.0
 ------
 
