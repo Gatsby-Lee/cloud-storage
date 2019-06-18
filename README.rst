@@ -20,3 +20,9 @@ How to use
 
     >>> from cloud_storage import GoogleCloudStorage
     >>> storage = GoogleCloudStorage()
+
+
+.. code-block:: python
+
+    >>> from cloud_storage import create_storage_client
+    >>> storage = create_storage_client()

@@ -3,14 +3,15 @@ from setuptools import setup, find_packages
 from codecs import open  # To use a consistent encoding
 from os import path
 
-from cloud_storage import __version__
-
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
+version = {}
+with open(path.join(here, 'cloud_storage/__about__.py'), encoding='utf-8') as f:
+    exec(f.read(), version)
 
 setup(
     name='cloud-storage',
@@ -18,7 +19,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version=__version__,
+    version=version['__version__'],
 
     description='Cloud Storage',
     long_description=long_description,
