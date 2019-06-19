@@ -10,6 +10,7 @@ import google.cloud.storage
 from cloud_storage.excepts import (
     CloudStorageBadRequestException,
     CloudStorageInvalidArgumentTypeException,
+    CloudStorageNotFoundException,
     CloudStorageServerErrorException,
     CloudStorageUnknownErrorException,
 )
@@ -25,6 +26,8 @@ def gcs_api_exception_handler(f):
                 google.api_core.exceptions.ServerError,
                 google.api_core.exceptions.ServiceUnavailable):
             raise CloudStorageServerErrorException(traceback.format_exc())
+        except google.api_core.exceptions.NotFound:
+            raise CloudStorageNotFoundException(traceback.format_exc())
         except AssertionError:
             raise CloudStorageInvalidArgumentTypeException(
                 traceback.format_exc())
