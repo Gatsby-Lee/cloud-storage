@@ -14,6 +14,10 @@ class CloudStorageInvalidArgumentTypeException(Exception):
     pass
 
 
+class CloudStorageNotFoundException (Exception):
+    pass
+
+
 class CloudStorageServerErrorException(Exception):
     pass
 
@@ -25,6 +29,7 @@ class CloudStorageUnknownErrorException(Exception):
 __all__ = (
     'CloudStorageBadRequestException',
     'CloudStorageInvalidArgumentTypeException',
+    'CloudStorageNotFoundException',
     'CloudStorageServerErrorException',
     'CloudStorageUnknownErrorException',
 )
