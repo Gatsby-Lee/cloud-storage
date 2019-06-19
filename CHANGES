@@ -1,6 +1,12 @@
 CHANGES ( Latest to Oldest )
 ============================
 
+v1.3.2
+------
+
+- Update exception message for CloudStorageNotFoundException not to use traceback
+
+
 v1.3.1
 ------
 
