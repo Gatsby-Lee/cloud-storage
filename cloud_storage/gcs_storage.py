@@ -2,8 +2,6 @@
 :author: Henley Kuang
 :since: 06/12/2019
 """
-import traceback
-
 import google.api_core.exceptions
 import google.cloud.storage
 
@@ -20,19 +18,18 @@ def gcs_api_exception_handler(f):
     def decorate(*args, **kwargs):
         try:
             return f(*args, **kwargs)
-        except google.api_core.exceptions.BadRequest:
-            raise CloudStorageBadRequestException(traceback.format_exc())
+        except google.api_core.exceptions.BadRequest as e:
+            raise CloudStorageBadRequestException(str(e))
         except (google.api_core.exceptions.InternalServerError,
                 google.api_core.exceptions.ServerError,
-                google.api_core.exceptions.ServiceUnavailable):
-            raise CloudStorageServerErrorException(traceback.format_exc())
+                google.api_core.exceptions.ServiceUnavailable) as e:
+            raise CloudStorageServerErrorException(str(e))
         except google.api_core.exceptions.NotFound as e:
             raise CloudStorageNotFoundException(str(e))
-        except AssertionError:
-            raise CloudStorageInvalidArgumentTypeException(
-                traceback.format_exc())
-        except Exception:
-            raise CloudStorageUnknownErrorException(traceback.format_exc())
+        except AssertionError as e:
+            raise CloudStorageInvalidArgumentTypeException(str(e)) from e
+        except Exception as e:
+            raise CloudStorageUnknownErrorException(str(e)) from e
     return decorate
 
 
