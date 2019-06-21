@@ -50,8 +50,8 @@ def _main():
         upload_str = options.upload_str.encode('utf-8')
         content_type = 'text/html'
         content_encoding = None
-        gcs_storage.upload(bucket_name, upload_str,
-                           object_key, content_type, content_encoding)
+        gcs_storage.upload(bucket_name, object_key, upload_str,
+                           content_type, content_encoding)
     elif options.sub_command == 'download':
         download_path = options.download_path
         if download_path:
