@@ -33,13 +33,13 @@ def gcs_api_exception_handler(f):
     return decorate
 
 
-class GoogleCloudStorage():
+class GoogleCloudStorage(object):
 
     def __init__(self):
         self.storage_client = google.cloud.storage.Client()
         self._buckets = {}
 
-    def __get_bucket(self, bucket_name):
+    def _get_bucket(self, bucket_name):
         try:
             return self._buckets[bucket_name]
         except KeyError:
@@ -47,20 +47,20 @@ class GoogleCloudStorage():
                 bucket_name)
             return self._buckets[bucket_name]
 
-    def list_buckets(self):
+    def list_bucket_names(self):
         """ Get the list of buckets in GCS
         Returns:
             list. List of strings of bucket names
 
         Example.
 
-        >>> GoogleCloudStorage().list_buckets()
+        >>> GoogleCloudStorage().list_bucket_names()
         ["bucket1", "bucket2"]
         """
         return list(self.storage_client.list_buckets())
 
     @gcs_api_exception_handler
-    def upload_file(self, bucket_name, source_file_name, object_key,
+    def upload_file(self, bucket_name, object_key, source_file_name,
                     content_type=None, content_encoding=None):
         """Upload a file to a bucket
 
@@ -74,7 +74,7 @@ class GoogleCloudStorage():
             content_encoding(str): Encoding used on content for uploading
 
         """
-        bucket = self.__get_bucket(bucket_name)
+        bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
         if content_encoding is not None:
             blob.content_encoding = content_encoding
@@ -82,7 +82,7 @@ class GoogleCloudStorage():
         blob.upload_from_filename(source_file_name, content_type=content_type)
 
     @gcs_api_exception_handler
-    def upload(self, bucket_name, buffer, object_key,
+    def upload(self, bucket_name, object_key, buffer,
                content_type=None, content_encoding=None):
         """Upload content to a bucket
 
@@ -97,7 +97,7 @@ class GoogleCloudStorage():
 
         """
         assert isinstance(buffer, bytes)
-        bucket = self.__get_bucket(bucket_name)
+        bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
 
         if content_encoding is not None:
@@ -123,7 +123,7 @@ class GoogleCloudStorage():
         >>> GoogleCloudStorage().is_exists("my_bucket", "my_object_key")
         True
         """
-        bucket = self.__get_bucket(bucket_name)
+        bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
         return blob.exists()
 
@@ -136,7 +136,7 @@ class GoogleCloudStorage():
             object_key (str): Object Key to rename
             new_object_key (str): Object Key to be renamed to
         """
-        bucket = self.__get_bucket(bucket_name)
+        bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
         bucket.rename_blob(blob, new_object_key)
 
@@ -149,7 +149,7 @@ class GoogleCloudStorage():
             object_key (str): Object Key to rename
             destination_file_name (str): Local file path
         """
-        bucket = self.__get_bucket(bucket_name)
+        bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
         blob.download_to_filename(destination_file_name)
 
@@ -164,12 +164,14 @@ class GoogleCloudStorage():
         Returns:
             bytes. Content stored in the object
 
-        Example.
+        Note:
+            Content will be decoded with codec specipied in `content-encoding`
 
+        Example.
         >>> GoogleCloudStorage().download("my_bucket", "my_object_key")
         b'This is content in your object key'
         """
-        bucket = self.__get_bucket(bucket_name)
+        bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
         return blob.download_as_string()
 
@@ -181,6 +183,6 @@ class GoogleCloudStorage():
             bucket_name (str):  Bucket name to use
             object_key (str): Object Key to rename
         """
-        bucket = self.__get_bucket(bucket_name)
+        bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
         blob.delete()
