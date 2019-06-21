@@ -60,7 +60,7 @@ class GoogleCloudStorage(object):
         return list(self.storage_client.list_buckets())
 
     @gcs_api_exception_handler
-    def upload_file(self, bucket_name, source_file_name, object_key,
+    def upload_file(self, bucket_name, object_key, source_file_name,
                     content_type=None, content_encoding=None):
         """Upload a file to a bucket
 
@@ -82,7 +82,7 @@ class GoogleCloudStorage(object):
         blob.upload_from_filename(source_file_name, content_type=content_type)
 
     @gcs_api_exception_handler
-    def upload(self, bucket_name, buffer, object_key,
+    def upload(self, bucket_name, object_key, buffer,
                content_type=None, content_encoding=None):
         """Upload content to a bucket
 
