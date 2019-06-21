@@ -6,6 +6,10 @@
 """
 
 
+class UnsupportedStorage(Exception):
+    pass
+
+
 class CloudStorageBadRequestException(Exception):
     pass
 

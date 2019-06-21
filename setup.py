@@ -70,5 +70,5 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
     python_requires=">=3.6",
-    install_requires=['google-cloud-storage'],
+    install_requires=['google-cloud-storage', 'boto3'],
 )
