@@ -25,17 +25,38 @@ class S3CloudStorageBoto3(object):
             bucket_names.append(bucket_raw_info['Name'])
         return bucket_names
 
-    def upload_file(self, bucket_name, source_file_name, object_key,
+    def upload_file(self, bucket_name, object_key, source_file_name,
                     content_type=None, content_encoding=None):
         """
         Uploads a local file to a bucket
         """
+        # Allowed values for ExtraArgs
+        # ref: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/customizations/s3.html#boto3.s3.transfer.S3Transfer.ALLOWED_UPLOAD_ARGS
+        self.storage_client.upload_file(
+            Bucket=bucket_name, Key=object_key, Filename=source_file_name,
+            ExtraArgs={'ContentType': content_type,
+                       'ContentEncoding': content_encoding}
+        )
 
-    def upload(self, bucket_name, buffer, object_key,
+    def upload(self, bucket_name, object_key, buffer,
                content_type=None, content_encoding=None):
+        """Upload content to a bucket
+
+        Args:
+            bucket_name (str):  Bucket name to use
+            buffer (bytes): Content to upload
+            object_key (str): Object key stored in bucket
+
+        Kwargs:
+            content_type (str): Type of Content
+            content_encoding(str): Encoding used on content for uploading
+
         """
-        Uploads a string to a bucket
-        """
+        assert isinstance(buffer, bytes)
+        self.storage_client.put_object(
+            Bucket=bucket_name, Key=object_key, Body=buffer,
+            ContentType=content_type, ContentEncoding=content_encoding
+        )
 
     def is_exists(self, bucket_name, object_key):
         """
@@ -45,6 +66,7 @@ class S3CloudStorageBoto3(object):
 
     def rename(self, bucket_name, object_key, new_object_key):
         """Renames a blob."""
+        raise NotImplementedError
 
     def download_to_file(self, bucket_name, object_key, destination_file_name):
         """Download an object to local
