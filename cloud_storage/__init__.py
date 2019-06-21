@@ -4,8 +4,8 @@ from cloud_storage.gcs_storage import GoogleCloudStorage
 from cloud_storage.s3_storage_boto3 import S3CloudStorageBoto3
 
 STORAGE_CLIENT_MAPPING = {
-    'gcs': (GoogleCloudStorage,),
-    's3': (S3CloudStorageBoto3,),
+    'gcs': GoogleCloudStorage,
+    's3': S3CloudStorageBoto3,
 }
 
 
@@ -17,10 +17,10 @@ def create_storage_client(name):
         name
     """
     try:
-        client_info = STORAGE_CLIENT_MAPPING[name]
+        client_class = STORAGE_CLIENT_MAPPING[name]
     except KeyError:
         raise UnsupportedStorage('%s is not supported.' % name)
-    return client_info[0]()
+    return client_class()
 
 
 def int_or_str(value):

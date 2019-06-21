@@ -12,7 +12,7 @@ class S3CloudStorageBoto3(object):
     def __init__(self):
         self.storage_client = boto3.client('s3')
 
-    def list_bucket_name(self):
+    def list_bucket_names(self):
         """Return list of bucket names
 
         Returns:

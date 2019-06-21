@@ -47,14 +47,14 @@ class GoogleCloudStorage(object):
                 bucket_name)
             return self._buckets[bucket_name]
 
-    def list_bucket_name(self):
+    def list_bucket_names(self):
         """ Get the list of buckets in GCS
         Returns:
             list. List of strings of bucket names
 
         Example.
 
-        >>> GoogleCloudStorage().list_bucket_name()
+        >>> GoogleCloudStorage().list_bucket_names()
         ["bucket1", "bucket2"]
         """
         return list(self.storage_client.list_buckets())

@@ -51,7 +51,7 @@ def _main():
 
     client = create_storage_client('s3')
     if args.cmd == 'bucket' and args.sub_cmd == 'list':
-        print(client.list_bucket_name())
+        print(client.list_bucket_names())
     elif args.cmd == 'download-gzipped':
         content = client.download_gzipped(
             args.bucket_name, args.object_key, args.decode_gzip)
