@@ -42,6 +42,8 @@ def _parse_args():
     upload_parser.add_argument('--content-encoding')
     upload_parser.add_argument('--content-type')
 
+    cmd_parser.add_parser('delete', parents=[base_parser])
+
     return parser.parse_args()
 
 
@@ -63,8 +65,10 @@ def _main():
             args.bucket_name, args.object_key, args.output_filename)
     elif args.cmd == 'upload':
         upload_str = args.upload_str.encode()
-        client.upload(args.bucket_name, upload_str, args.object_key,
+        client.upload(args.bucket_name, args.object_key, upload_str,
                       args.content_type, args.content_encoding)
+    elif args.cmd == 'delete':
+        client.delete(args.bucket_name, args.object_key)
 
 
 if __name__ == '__main__':
