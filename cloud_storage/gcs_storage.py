@@ -68,11 +68,11 @@ class GoogleCloudStorage(object):
             bucket_name (str):  Bucket name to use
             source_file_name (str): Local file path
             object_key (str): Object key stored in bucket
-
         Kwargs:
             content_type (str): Type of Content
             content_encoding(str): Encoding used on content for uploading
-
+        Returns:
+            None
         """
         bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
@@ -90,11 +90,11 @@ class GoogleCloudStorage(object):
             bucket_name (str):  Bucket name to use
             buffer (bytes): Content to upload
             object_key (str): Object key stored in bucket
-
         Kwargs:
             content_type (str): Type of Content
             content_encoding(str): Encoding used on content for uploading
-
+        Returns:
+            None
         """
         assert isinstance(buffer, bytes)
         bucket = self._get_bucket(bucket_name)
@@ -135,6 +135,8 @@ class GoogleCloudStorage(object):
             bucket_name (str):  Bucket name to use
             object_key (str): Object Key to rename
             new_object_key (str): Object Key to be renamed to
+        Returns:
+            None
         """
         bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
@@ -148,6 +150,8 @@ class GoogleCloudStorage(object):
             bucket_name (str):  Bucket name to use
             object_key (str): Object Key to rename
             destination_file_name (str): Local file path
+        Returns:
+            None
         """
         bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
@@ -160,10 +164,8 @@ class GoogleCloudStorage(object):
         Args:
             bucket_name (str):  Bucket name to use
             object_key (str): Object Key to rename
-
         Returns:
             bytes. Content stored in the object
-
         Note:
             Content will be decoded with codec specipied in `content-encoding`
 
@@ -182,6 +184,8 @@ class GoogleCloudStorage(object):
         Args:
             bucket_name (str):  Bucket name to use
             object_key (str): Object Key to rename
+        Returns:
+            None
         """
         bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
