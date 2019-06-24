@@ -18,6 +18,9 @@ def _parse_args():
     base_parser.add_argument(
         '--object-key', required=True, help='destination of blob')
 
+    rename_arg_parser = argparse.ArgumentParser(add_help=False)
+    rename_arg_parser.add_argument('--new-object-key', required=True)
+
     cmd_parser = parser.add_subparsers(dest='cmd')
     cmd_parser.required = True
 
@@ -35,6 +38,7 @@ def _parse_args():
 
     cmd_parser.add_parser('exists', parents=[base_parser])
     cmd_parser.add_parser('delete', parents=[base_parser])
+    cmd_parser.add_parser('rename', parents=[base_parser, rename_arg_parser])
 
     return parser.parse_args()
 
@@ -67,6 +71,8 @@ def _main():
         print(exists)
     elif args.cmd == 'delete':
         client.delete(bucket_name, object_key)
+    elif args.cmd == 'rename':
+        client.rename(args.bucket_name, args.object_key, args.new_object_key)
 
 
 if __name__ == '__main__':

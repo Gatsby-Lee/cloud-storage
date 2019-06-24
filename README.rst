@@ -28,57 +28,53 @@ How to use
     >>> storage = create_storage_client()
 
 
-Playground Test - GCS
----------------------
+Playground Download
+-------------------
+
+* gcs_storage_playground.py
+* s3_storage_boto3_playground.py
 
 .. code-block:: python
 
-    python playground/gcs_storage_playground.py upload --bucket-name <your_bucket> \
+    python playground/<play_ground_module> upload --bucket-name <your_bucket> \
         --object-key "test_sample.html" \
         --upload-str "<html>hello</html>" \
         --content-encoding="gzip" \
         --content-type="text/html"
 
-    python playground/gcs_storage_playground.py download-gzipped --bucket-name <your_bucket>
+    python playground/<play_ground_module> download-gzipped --bucket-name <your_bucket> \
         --object-key "test_sample.html"
 
-    python playground/gcs_storage_playground.py download-gzipped --bucket-name <your_bucket>
+    python playground/<play_ground_module> download-gzipped --bucket-name <your_bucket> \
         --object-key "test_sample.html" \
         --do-gunzip
 
-    python playground/gcs_storage_playground.py download-gzipped --bucket-name <your_bucket>
+    python playground/<play_ground_module> download-gzipped --bucket-name <your_bucket> \
         --object-key "test_sample.html" \
         --download-path='test_sample.html'
 
-    python playground/gcs_storage_playground.py download-gzipped --bucket-name <your_bucket>
+    python playground/<play_ground_module> download-gzipped --bucket-name <your_bucket> \
         --object-key "test_sample.html" \
         --do-gunzip \
         --download-path test_sample.html
 
 
-Playground Test - S3
----------------------
+Playground Rename
+-----------------
 
-.. code-block:: python
+    python playground/<play_ground_module> rename --bucket-name <your_bucket> \
+        --object-key "test_sample.html" --new-object-key "test_sample1.html"
 
-    python playground/s3_storage_boto3_playground.py upload --bucket-name <your_bucket> \
-        --object-key "test_sample.html" \
-        --upload-str "<html>hello</html>" \
-        --content-encoding="gzip" \
-        --content-type="text/html"
 
-    python playground/s3_storage_boto3_playground.py download-gzipped --bucket-name <your_bucket>
-        --object-key "test_sample.html"
+Playground Exists
+-----------------
 
-    python playground/s3_storage_boto3_playground.py download-gzipped --bucket-name <your_bucket>
-        --object-key "test_sample.html" \
-        --do-gunzip
+    python playground/<play_ground_module> exists --bucket-name <your_bucket> \
+        --object-key "test_sample1.html"
 
-    python playground/s3_storage_boto3_playground.py download-gzipped --bucket-name <your_bucket>
-        --object-key "test_sample.html" \
-        --download-path='test_sample.html'
 
-    python playground/s3_storage_boto3_playground.py download-gzipped --bucket-name <your_bucket>
-        --object-key "test_sample.html" \
-        --do-gunzip \
-        --download-path test_sample.html
+Playground Delete
+-----------------
+
+    python playground/<play_ground_module> delete --bucket-name <your_bucket> \
+        --object-key "test_sample1.html"

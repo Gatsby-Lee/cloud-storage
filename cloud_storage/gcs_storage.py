@@ -153,8 +153,12 @@ class GoogleCloudStorage(object):
         Returns:
             None
         """
+        assert(object_key != new_object_key), \
+            "object_key can't be same to new_object_key"
+
         bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
+        # Since this is not atomic operation, deleting current key might fail.
         bucket.rename_blob(blob, new_object_key)
 
     @gcs_api_exception_handler

@@ -110,9 +110,27 @@ class S3CloudStorageBoto3(object):
             # not handled, bring up.
             raise e
 
+    @s3_boto3_api_exception_handler
     def rename(self, bucket_name, object_key, new_object_key):
-        """Renames a blob."""
-        raise NotImplementedError
+        """Renames an object
+
+        Args:
+            bucket_name (str):  Bucket name to use
+            object_key (str): Object Key to rename
+            new_object_key (str): Object Key to be renamed to
+        Returns:
+            None
+        """
+        assert(object_key != new_object_key), \
+            "object_key can't be same to new_object_key"
+
+        # Since this is not atomic operation, deleting current key might fail.
+        self.storage_client.copy_object(
+            Bucket=bucket_name, Key=new_object_key,
+            CopySource={
+                'Bucket': bucket_name, 'Key': object_key},
+        )
+        self.delete(bucket_name, object_key)
 
     @s3_boto3_api_exception_handler
     def download_gzipped_to_file(self, bucket_name, object_key, destination_file_name,
