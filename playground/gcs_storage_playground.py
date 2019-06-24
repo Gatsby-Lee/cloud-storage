@@ -14,57 +14,52 @@ def _parse_args():
 
     base_parser = argparse.ArgumentParser(add_help=False)
     base_parser.add_argument(
-        '--bucket-name', default='playground-test-bucket', help='bucket name')
+        '--bucket-name', required=True, help='bucket name')
     base_parser.add_argument(
-        '--object-key', default='test/key/1.html', help='destination of blob')
+        '--object-key', required=True, help='destination of blob')
 
-    upload_parser = argparse.ArgumentParser(add_help=False)
-    upload_parser.add_argument(
-        '--upload-str', default='Test Upload String', help='string value to upload for testing')
+    cmd_parser = parser.add_subparsers(dest='sub_command')
+    cmd_parser.required = True
 
-    download_parser = argparse.ArgumentParser(add_help=False)
+    upload_parser = cmd_parser.add_parser('upload', parents=[base_parser])
+    upload_parser.add_argument('--upload-str', required=True)
+    upload_parser.add_argument('--content-encoding')
+    upload_parser.add_argument('--content-type')
+
+    download_parser = cmd_parser.add_parser('download', parents=[base_parser])
     download_parser.add_argument(
         '--download-path', help='path to download blob')
 
-    command_subparser = parser.add_subparsers(dest='sub_command')
-    command_subparser.required = True
-
-    command_subparser.add_parser(
-        'upload', parents=[base_parser, upload_parser])
-    command_subparser.add_parser(
-        'download', parents=[base_parser, download_parser])
-    command_subparser.add_parser('exists', parents=[base_parser])
-    command_subparser.add_parser('delete', parents=[base_parser])
+    cmd_parser.add_parser('exists', parents=[base_parser])
+    cmd_parser.add_parser('delete', parents=[base_parser])
 
     return parser.parse_args()
 
 
 def _main():
-    options = _parse_args()
-    bucket_name = options.bucket_name
-    object_key = options.object_key
+    args = _parse_args()
+    bucket_name = args.bucket_name
+    object_key = args.object_key
 
-    gcs_storage = GoogleCloudStorage()
+    client = GoogleCloudStorage()
 
-    if options.sub_command == 'upload':
-        upload_str = options.upload_str.encode('utf-8')
-        content_type = 'text/html'
-        content_encoding = None
-        gcs_storage.upload(bucket_name, object_key, upload_str,
-                           content_type, content_encoding)
-    elif options.sub_command == 'download':
-        download_path = options.download_path
+    if args.sub_command == 'upload':
+        upload_str = args.upload_str.encode('utf-8')
+        client.upload(bucket_name, object_key, upload_str,
+                      args.content_type, args.content_encoding)
+    elif args.sub_command == 'download':
+        download_path = args.download_path
         if download_path:
-            gcs_storage.download_to_file(
+            client.download_to_file(
                 bucket_name, object_key, download_path)
         else:
-            content = gcs_storage.download(bucket_name, object_key)
-            LOGGER.info(content)
-    elif options.sub_command == 'exists':
-        exists = gcs_storage.is_exists(bucket_name, object_key)
-        LOGGER.info(exists)
-    elif options.sub_command == 'delete':
-        gcs_storage.delete(bucket_name, object_key)
+            content = client.download(bucket_name, object_key)
+            print(content)
+    elif args.sub_command == 'exists':
+        exists = client.is_exists(bucket_name, object_key)
+        print(exists)
+    elif args.sub_command == 'delete':
+        client.delete(bucket_name, object_key)
 
 
 if __name__ == '__main__':
