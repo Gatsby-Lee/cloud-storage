@@ -67,6 +67,14 @@ def _main():
             args.bucket_name, args.object_key, args.download_path)
     elif args.cmd == 'upload':
         upload_str = args.upload_str.encode()
+        if args.content_encoding == 'gzip':
+            import gzip
+            size_before_compression = len(upload_str)
+            upload_str = gzip.compress(upload_str)
+            size_after_compression = len(upload_str)
+            LOGGER.info(
+                'content-encoding=gzip. applying gzip.compress. before:%s, after:%s',
+                size_before_compression, size_after_compression)
         client.upload(args.bucket_name, args.object_key, upload_str,
                       args.content_type, args.content_encoding)
     elif args.cmd == 'delete':
@@ -76,4 +84,5 @@ def _main():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     _main()
