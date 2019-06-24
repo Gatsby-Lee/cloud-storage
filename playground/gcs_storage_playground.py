@@ -45,6 +45,14 @@ def _main():
 
     if args.sub_command == 'upload':
         upload_str = args.upload_str.encode('utf-8')
+        if args.content_encoding == 'gzip':
+            import gzip
+            size_before_compression = len(upload_str)
+            upload_str = gzip.compress(upload_str)
+            size_after_compression = len(upload_str)
+            LOGGER.info(
+                'content-encoding=gzip. applying gzip.compress. before:%s, after:%s',
+                size_before_compression, size_after_compression)
         client.upload(bucket_name, object_key, upload_str,
                       args.content_type, args.content_encoding)
     elif args.sub_command == 'download':
