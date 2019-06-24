@@ -115,27 +115,37 @@ class S3CloudStorageBoto3(object):
         raise NotImplementedError
 
     @s3_boto3_api_exception_handler
-    def download_to_file(self, bucket_name, object_key, destination_file_name):
+    def download_gzipped_to_file(self, bucket_name, object_key, destination_file_name,
+                                 do_gunzip=False):
         """Download an object to local
 
          Args:
              bucket_name(str):  Bucket name to use
              object_key(str): Object Key to rename
              destination_file_name(str): Local file path
+        Kwargs:
+            do_gunzip(bool): True to gunzip(default: False)
         Returns:
             None
          """
-        self.storage_client.download_file(
-            Bucket=bucket_name, Key=object_key, Filename=destination_file_name)
+        if do_gunzip:
+            object_content = self.download_gzipped(
+                bucket_name, object_key, do_gunzip)
+            with open(destination_file_name, 'wb') as f:
+                f.write(object_content)
+        else:
+            self.storage_client.download_file(
+                Bucket=bucket_name, Key=object_key, Filename=destination_file_name)
 
     @s3_boto3_api_exception_handler
-    def download_gzipped(self, bucket_name, object_key, decode_gzip=False):
+    def download_gzipped(self, bucket_name, object_key, do_gunzip=False):
         """Download an gzipped object content to memory
 
         Args:
             bucket_name(str):  Bucket name to use
             object_key(str): Object Key to rename
-            decode_gzip(bool): True to decode_gzip(default: False)
+        Kwargs:
+            do_gunzip(bool): True to gunzip(default: False)
         Returns:
             bytes. Content stored in the object
         """
@@ -149,7 +159,7 @@ class S3CloudStorageBoto3(object):
         # Once response['Body'] is stream.
         # Therefore, once it is read, next reading will return empty.
         object_content = response['Body'].read()
-        if decode_gzip:
+        if do_gunzip:
             # @ref: https://gist.github.com/veselosky/9427faa38cee75cd8e27
             object_content = gzip.decompress(object_content)
 

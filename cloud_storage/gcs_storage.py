@@ -2,8 +2,14 @@
 :author: Henley Kuang
 :since: 06/12/2019
 """
+import gzip
+import logging
+import os
+
 import google.api_core.exceptions
 import google.cloud.storage
+
+from google import resumable_media
 
 from cloud_storage.excepts import (
     CloudStorageBadRequestException,
@@ -12,6 +18,15 @@ from cloud_storage.excepts import (
     CloudStorageServerErrorException,
     CloudStorageUnknownErrorException,
 )
+
+
+"""
+@ref:
+https://2.python-requests.org//en/master/user/quickstart/#binary-response-content
+https://github.com/googleapis/google-resumable-media-python/blob/master/google/resumable_media/requests/__init__.py
+"""
+
+LOGGER = logging.getLogger(__name__)
 
 
 def gcs_api_exception_handler(f):
@@ -143,39 +158,66 @@ class GoogleCloudStorage(object):
         bucket.rename_blob(blob, new_object_key)
 
     @gcs_api_exception_handler
-    def download_to_file(self, bucket_name, object_key, destination_file_name):
+    def download_gzipped_to_file(self, bucket_name, object_key, destination_file_name,
+                                 do_gunzip=False):
         """Download an object to local
 
         Args:
             bucket_name (str):  Bucket name to use
             object_key (str): Object Key to rename
             destination_file_name (str): Local file path
+        Kwargs:
+            do_gunzip(bool): True to gunzip(default: False)
         Returns:
             None
         """
         bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
-        blob.download_to_filename(destination_file_name)
+
+        # blob.download_to_filename(destination_file_name)
+        # https://googleapis.github.io/google-cloud-python/latest/_modules/google/cloud/storage/blob.html#Blob.download_to_file
+        try:
+            if do_gunzip:
+                with open(destination_file_name, "wb") as file_obj:
+                    blob.download_to_file(file_obj)
+            else:
+                LOGGER.debug('applying gzip compression..')
+                with gzip.open(destination_file_name, "wb") as file_obj:
+                    blob.download_to_file(file_obj)
+        except resumable_media.DataCorruption:
+            # Delete the corrupt downloaded file.
+            os.remove(destination_file_name)
+            raise
 
     @gcs_api_exception_handler
-    def download(self, bucket_name, object_key):
+    def download_gzipped(self, bucket_name, object_key, do_gunzip=False):
         """Download an object to memory
 
         Args:
             bucket_name (str):  Bucket name to use
             object_key (str): Object Key to rename
+        Kwargs:
+            do_gunzip(bool): True to gunzip(default: False)
         Returns:
             bytes. Content stored in the object
-        Note:
-            Content will be decoded with codec specipied in `content-encoding`
 
         Example.
-        >>> GoogleCloudStorage().download("my_bucket", "my_object_key")
+        >>> GoogleCloudStorage().download_gzipped("my_bucket", "my_object_key")
         b'This is content in your object key'
         """
         bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
-        return blob.download_as_string()
+
+        # Google uses python-requests.
+        # And, The gzip and deflate transfer-encodings are automatically decoded.
+        content = blob.download_as_string()
+        if do_gunzip:
+            return content
+
+        # @TODO: update to use io stream.
+        LOGGER.debug('applying gzip compression..')
+        compressed_blob = gzip.compress(content)
+        return compressed_blob
 
     @gcs_api_exception_handler
     def delete(self, bucket_name, object_key):
