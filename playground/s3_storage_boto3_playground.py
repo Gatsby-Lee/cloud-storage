@@ -44,6 +44,8 @@ def _parse_args():
 
     cmd_parser.add_parser('delete', parents=[base_parser])
 
+    cmd_parser.add_parser('exists', parents=[base_parser])
+
     return parser.parse_args()
 
 
@@ -69,6 +71,8 @@ def _main():
                       args.content_type, args.content_encoding)
     elif args.cmd == 'delete':
         client.delete(args.bucket_name, args.object_key)
+    elif args.cmd == 'exists':
+        print(client.is_exists(args.bucket_name, args.object_key))
 
 
 if __name__ == '__main__':
