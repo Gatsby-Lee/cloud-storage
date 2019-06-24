@@ -35,7 +35,7 @@ def _parse_args():
     download_to_file_parser = cmd_parser.add_parser(
         'download-to-file', parents=[base_parser])
     download_to_file_parser.add_argument(
-        '--output-filename', required=True)
+        '--download-path', required=True)
 
     upload_parser = cmd_parser.add_parser('upload', parents=[base_parser])
     upload_parser.add_argument('--upload-str')
@@ -64,7 +64,7 @@ def _main():
         print(content)
     elif args.cmd == 'download-to-file':
         client.download_to_file(
-            args.bucket_name, args.object_key, args.output_filename)
+            args.bucket_name, args.object_key, args.download_path)
     elif args.cmd == 'upload':
         upload_str = args.upload_str.encode()
         client.upload(args.bucket_name, args.object_key, upload_str,
