@@ -34,7 +34,7 @@ Playground Download
 * gcs_storage_playground.py
 * s3_storage_boto3_playground.py
 
-.. code-block:: python
+.. code-block:: bash
 
     python playground/<play_ground_module> upload --bucket-name <your_bucket> \
         --object-key "test_sample.html" \
@@ -62,6 +62,11 @@ Playground Download
 Playground Rename
 -----------------
 
+* gcs_storage_playground.py
+* s3_storage_boto3_playground.py
+
+.. code-block:: bash
+
     python playground/<play_ground_module> rename --bucket-name <your_bucket> \
         --object-key "test_sample.html" --new-object-key "test_sample1.html"
 
@@ -69,12 +74,22 @@ Playground Rename
 Playground Exists
 -----------------
 
+* gcs_storage_playground.py
+* s3_storage_boto3_playground.py
+
+.. code-block:: bash
+
     python playground/<play_ground_module> exists --bucket-name <your_bucket> \
         --object-key "test_sample1.html"
 
 
 Playground Delete
 -----------------
+
+* gcs_storage_playground.py
+* s3_storage_boto3_playground.py
+
+.. code-block:: bash
 
     python playground/<play_ground_module> delete --bucket-name <your_bucket> \
         --object-key "test_sample1.html"
