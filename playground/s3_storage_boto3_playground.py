@@ -60,6 +60,7 @@ def _main():
         content = client.download_gzipped(
             args.bucket_name, args.object_key, args.decode_gzip)
         if args.decode_gzip:
+            LOGGER.info('Decoding bytes to str.')
             content = content.decode()
         print(content)
     elif args.cmd == 'download-to-file':
