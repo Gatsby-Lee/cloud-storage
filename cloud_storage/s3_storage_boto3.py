@@ -31,7 +31,7 @@ def s3_boto3_api_exception_handler(f):
         except botocore.exceptions.ClientError as e:
             if e.response['ResponseMetadata']['HTTPStatusCode'] == HTTPStatus.NOT_FOUND:
                 raise CloudStorageNotFoundException(str(e)) from None
-            # not cached, bring up.
+            # not handled, bring up.
             raise e
         except AssertionError as e:
             raise CloudStorageInvalidArgumentTypeException(str(e)) from e
@@ -101,7 +101,14 @@ class S3CloudStorageBoto3(object):
         Returns:
             True if exists.
         """
-        self.storage_client.head_object(Bucket=bucket_name, Key=object_key)
+        try:
+            self.storage_client.head_object(Bucket=bucket_name, Key=object_key)
+            return True
+        except botocore.exceptions.ClientError as e:
+            if e.response['ResponseMetadata']['HTTPStatusCode'] == HTTPStatus.NOT_FOUND:
+                return False
+            # not handled, bring up.
+            raise e
 
     def rename(self, bucket_name, object_key, new_object_key):
         """Renames a blob."""
