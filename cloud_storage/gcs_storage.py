@@ -3,6 +3,7 @@
 :since: 06/12/2019
 """
 import gzip
+import io
 import logging
 import os
 
@@ -24,6 +25,9 @@ from cloud_storage.excepts import (
 @ref:
 https://2.python-requests.org//en/master/user/quickstart/#binary-response-content
 https://github.com/googleapis/google-resumable-media-python/blob/master/google/resumable_media/requests/__init__.py
+https://github.com/googleapis/google-resumable-media-python/blob/master/google/resumable_media/requests/download.py#L120
+https://github.com/googleapis/google-resumable-media-python/blob/master/google/resumable_media/requests/download.py#L139
+https://github.com/googleapis/google-cloud-python/blob/master/storage/google/cloud/storage/blob.py
 """
 
 LOGGER = logging.getLogger(__name__)
@@ -214,18 +218,30 @@ class GoogleCloudStorage(object):
 
         # Google uses python-requests.
         # And, The gzip and deflate transfer-encodings are automatically decoded.
-        content = blob.download_as_string()
+        # ref: https://github.com/googleapis/google-resumable-media-python/blob/master/google/resumable_media/requests/download.py#L120
         if do_gunzip:
-            return content
+            return blob.download_as_string()
 
-        # @TODO: update to use io stream.
         LOGGER.debug('applying gzip compression..')
-        compressed_blob = gzip.compress(content)
+        # version1:
+        # read all content and apply gzip compression
+        # compressed_blob = gzip.compress(blob.download_as_string())
+
+        # version2:
+        # using stream
+        compressed_blob = None
+        with io.BytesIO() as bytes_buffer:
+            with gzip.GzipFile(fileobj=bytes_buffer, mode='wb') as wgzip_buffer:
+                blob.download_to_file(wgzip_buffer)
+            compressed_blob = bytes_buffer.getvalue()
+
         return compressed_blob
 
     @gcs_api_exception_handler
     def delete(self, bucket_name, object_key):
-        """Delete an object from bucket
+        """Delete an object from bucket.
+
+        Exception won't be raised although object_key doesn't exist.
 
         Args:
             bucket_name (str):  Bucket name to use
@@ -235,4 +251,8 @@ class GoogleCloudStorage(object):
         """
         bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
-        blob.delete()
+        try:
+            blob.delete()
+        except google.api_core.exceptions.NotFound:
+            # slience if object_key doesn't exists
+            pass

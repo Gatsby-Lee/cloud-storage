@@ -45,8 +45,6 @@ def _parse_args():
 
 def _main():
     args = _parse_args()
-    bucket_name = args.bucket_name
-    object_key = args.object_key
 
     client = GoogleCloudStorage()
 
@@ -56,7 +54,7 @@ def _main():
             import gzip
             upload_str = gzip.compress(upload_str)
             LOGGER.info('content-encoding=gzip. applying gzip.compress.')
-        client.upload(bucket_name, object_key, upload_str,
+        client.upload(args.bucket_name, args.object_key, upload_str,
                       args.content_type, args.content_encoding)
     elif args.cmd == 'download-gzipped':
         if args.download_path:
@@ -67,10 +65,10 @@ def _main():
                 args.bucket_name, args.object_key, args.do_gunzip)
             print(content)
     elif args.cmd == 'exists':
-        exists = client.is_exists(bucket_name, object_key)
+        exists = client.is_exists(args.bucket_name, args.object_key)
         print(exists)
     elif args.cmd == 'delete':
-        client.delete(bucket_name, object_key)
+        client.delete(args.bucket_name, args.object_key)
     elif args.cmd == 'rename':
         client.rename(args.bucket_name, args.object_key, args.new_object_key)
 

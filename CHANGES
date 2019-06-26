@@ -1,6 +1,13 @@
 CHANGES ( Latest to Oldest )
 ============================
 
+v1.4.0
+------
+
+- Support S3, GCS
+- Add real integration testing for S3, GCS
+
+
 v1.3.2
 ------
 
