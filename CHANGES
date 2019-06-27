@@ -1,6 +1,12 @@
 CHANGES ( Latest to Oldest )
 ============================
 
+v1.4.1
+------
+
+- Update S3 download_gzipped to use file-like object
+
+
 v1.4.0
 ------
 

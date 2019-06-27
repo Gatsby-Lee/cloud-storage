@@ -77,7 +77,7 @@ def run_functionality_tests(client, bucket_name):
 def _parse_args():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--bucket-name')
+    parser.add_argument('--bucket-name', required=True)
 
     return parser.parse_args()
 

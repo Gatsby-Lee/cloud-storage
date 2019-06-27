@@ -3,6 +3,7 @@
 :since: 06/21/2019
 """
 import gzip
+import io
 import logging
 
 import boto3
@@ -167,21 +168,18 @@ class S3CloudStorageBoto3(object):
         Returns:
             bytes. Content stored in the object
         """
-        response = self.storage_client.get_object(
-            Bucket=bucket_name, Key=object_key)
-        LOGGER.debug('content-encoding:%s, content-type:%s',
-                     response['ContentEncoding'], response['ContentType'])
-        if response['ContentEncoding'] != 'gzip':
-            raise ValueError('Object is not gzipped.')
-
-        # Once response['Body'] is stream.
-        # Therefore, once it is read, next reading will return empty.
-        object_content = response['Body'].read()
         if do_gunzip:
-            # @ref: https://gist.github.com/veselosky/9427faa38cee75cd8e27
-            object_content = gzip.decompress(object_content)
+            with io.BytesIO() as bytes_buffer:
+                with gzip.GzipFile(fileobj=bytes_buffer, mode='rb') as rgzip_buffer:
+                    self.storage_client.download_fileobj(
+                        Bucket=bucket_name, Key=object_key, Fileobj=bytes_buffer)
+                    bytes_buffer.seek(0)
+                    return rgzip_buffer.read()
 
-        return object_content
+        with io.BytesIO() as bytes_buffer:
+            self.storage_client.download_fileobj(
+                Bucket=bucket_name, Key=object_key, Fileobj=bytes_buffer)
+            return bytes_buffer.getvalue()
 
     @s3_boto3_api_exception_handler
     def delete(self, bucket_name, object_key):
