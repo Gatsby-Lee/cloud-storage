@@ -27,8 +27,11 @@ How to use
 
 .. code-block:: python
 
+    # For Google Cloud Storage
     >>> from cloud_storage import GoogleCloudStorage
     >>> storage = GoogleCloudStorage()
+    # For AWS S3
+    >>> storage = S3CloudStorageBoto3()
 
 
 .. code-block:: python
