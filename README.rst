@@ -33,5 +33,8 @@ How to use
 
 .. code-block:: python
 
+    # using factory
     >>> from cloud_storage import create_storage_client
-    >>> storage = create_storage_client()
+    >>> gcs_storage = create_storage_client('gcs')
+    >>> s3_storage = create_storage_client('s3')
+
