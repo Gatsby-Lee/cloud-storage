@@ -13,6 +13,22 @@ version = {}
 with open(path.join(here, 'cloud_storage/__about__.py'), encoding='utf-8') as f:
     exec(f.read(), version)
 
+with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
+    requires = [row.strip() for row in f.readlines()]
+
+dev_requires = [
+    'wheel',
+    'bpython',
+    'pytest',
+    'flake8',
+    'autopep8',
+    'pylint'
+]
+
+test_requires = [
+    'pytest',
+]
+
 setup(
     name='cloud-storage',
 
@@ -21,7 +37,7 @@ setup(
     # http://packaging.python.org/en/latest/tutorial.html#version
     version=version['__version__'],
 
-    description='Cloud Storage',
+    description='Interface of S3 and Google Storgae',
     long_description=long_description,
     long_description_content_type='text/x-rst',
 
@@ -29,7 +45,7 @@ setup(
     url='https://github.com/Gatsby-Lee/cloud-storage',
 
     # Author details
-    author='Henley Kuang',
+    author='Henley Kuang, Gatsby Lee',
 
     # Choose your license
     license='GPL-3.0',
@@ -63,12 +79,16 @@ setup(
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     packages=find_packages(
-        exclude=['contrib', 'docs', 'tests*', 'playgroud*']),
+        exclude=['contrib', 'docs', 'tests*', 'playground*']),
 
     # List run-time dependencies here.  These will be installed by pip when your
     # project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
     python_requires=">=3.6",
-    install_requires=['google-cloud-storage', 'boto3'],
+    install_requires=requires,
+    extras_require={
+        'dev': dev_requires,
+        'test': test_requires,
+    },
 )
