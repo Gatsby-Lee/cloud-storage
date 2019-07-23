@@ -16,17 +16,18 @@ with open(path.join(here, 'cloud_storage/__about__.py'), encoding='utf-8') as f:
 with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     requires = [row.strip() for row in f.readlines()]
 
-dev_requires = [
+test_requires = [
+    'pytest',
+    'moto',
+]
+
+dev_requires = test_requires + [
     'wheel',
     'bpython',
     'pytest',
     'flake8',
     'autopep8',
     'pylint'
-]
-
-test_requires = [
-    'pytest',
 ]
 
 setup(

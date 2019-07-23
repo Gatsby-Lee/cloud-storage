@@ -73,7 +73,7 @@ class S3CloudStorageBoto3(object):
         )
 
     def upload(self, bucket_name, object_key, buffer,
-               content_type=None, content_encoding=None):
+               content_type='', content_encoding=''):
         """Upload content to a bucket
 
         Args:
