@@ -13,8 +13,10 @@ version = {}
 with open(path.join(here, 'cloud_storage/__about__.py'), encoding='utf-8') as f:
     exec(f.read(), version)
 
-with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
-    requires = [row.strip() for row in f.readlines()]
+requires = [
+    'boto3',
+    'google-cloud-storage',
+]
 
 test_requires = [
     'pytest',
