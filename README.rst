@@ -1,5 +1,10 @@
+
 .. image:: https://badge.fury.io/py/cloud-storage.svg
-    :target: https://badge.fury.io/py/cloud-storage
+    :target: https://pypi.org/project/cloud-storage/
+
+.. image:: https://img.shields.io/travis/Gatsby-Lee/cloud-storage.svg
+   :target: https://travis-ci.org/Gatsby-Lee/cloud-storage
+
 
 Cloud Storage
 =============
