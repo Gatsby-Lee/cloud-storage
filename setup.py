@@ -20,6 +20,7 @@ requires = [
 
 test_requires = [
     'pytest',
+    'pytest-mock'
     'moto',
 ]
 
