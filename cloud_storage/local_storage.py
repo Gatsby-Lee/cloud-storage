@@ -17,6 +17,8 @@ class LocalStorage(object):
             os.mkdir(self._root_dir)
 
     def _get_full_path(self, bucket_name, object_key):
+        if '/' in object_key:
+            raise ValueError('``/`` cannot be part of object_key')
         return os.path.join(self._root_dir, bucket_name, object_key)
 
     def create_bucket(self, bucket_name):

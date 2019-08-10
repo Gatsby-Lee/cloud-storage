@@ -10,7 +10,10 @@ LOCAL_STORAGE_ROOT_DIR = '/tmp/local_storage_test'
 
 @pytest.fixture
 def storage():
-    shutil.rmtree(LOCAL_STORAGE_ROOT_DIR)
+    try:
+        shutil.rmtree(LOCAL_STORAGE_ROOT_DIR)
+    except FileNotFoundError:
+        pass
     return LocalStorage(LOCAL_STORAGE_ROOT_DIR)
 
 
