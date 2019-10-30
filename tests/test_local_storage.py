@@ -1,3 +1,4 @@
+import hashlib
 import os
 import shutil
 
@@ -18,8 +19,10 @@ def storage():
 
 
 def test_get_full_path(storage):
+    object_key = 'efg.txt'
+    hashed_object_key = hashlib.md5(object_key.encode("utf-8")).hexdigest()
     full_path = storage._get_full_path('abc', 'efg.txt')
-    expected_path = '/tmp/local_storage_test/abc/efg.txt'
+    expected_path = '/tmp/local_storage_test/abc/%s' % hashed_object_key
     assert os.path.normpath(full_path) == os.path.normpath(expected_path)
 
 

@@ -2,6 +2,7 @@
 :author: Gatsby Lee
 :since: 2019-08-09
 """
+import hashlib
 import os
 import gzip
 import shutil
@@ -17,9 +18,11 @@ class LocalStorage(object):
             os.mkdir(self._root_dir)
 
     def _get_full_path(self, bucket_name, object_key):
-        if '/' in object_key:
-            raise ValueError('``/`` cannot be part of object_key')
-        return os.path.join(self._root_dir, bucket_name, object_key)
+        object_key_hash = hashlib.md5(object_key.encode("utf-8")).hexdigest()
+        bucket_directory = os.path.join(self._root_dir, bucket_name)
+        if not os.path.exists(bucket_directory):
+            self.create_bucket(bucket_name)
+        return os.path.join(self._root_dir, bucket_name, object_key_hash)
 
     def create_bucket(self, bucket_name):
         """
