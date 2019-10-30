@@ -19,7 +19,8 @@ def storage():
 
 def test_get_full_path(storage):
     full_path = storage._get_full_path('abc', 'efg.txt')
-    assert full_path == '/tmp/local_storage_test/abc/efg.txt'
+    expected_path = '/tmp/local_storage_test/abc/efg.txt'
+    assert os.path.normpath(full_path) == os.path.normpath(expected_path)
 
 
 def test_list_bucket_names(storage):
