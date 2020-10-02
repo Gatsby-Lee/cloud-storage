@@ -15,7 +15,7 @@ with open(path.join(here, "cloud_storage/__about__.py"), encoding="utf-8") as f:
 
 requires = [
     "boto3",
-    "google-cloud-storage",
+    "google-cloud-storage >= 1.24",
 ]
 
 test_requires = [
