@@ -1,6 +1,13 @@
 CHANGES ( Latest to Oldest )
 ============================
 
+v1.6.0
+------
+
+- Use `raw_download` for `Blob.download_to_file` and `Blob.download_as_string`.
+- specified minimum version of google-cloud-storage ( 1.24 )
+- specified minimum version of six ( 1.15 )
+
 v1.4.1
 ------
 
