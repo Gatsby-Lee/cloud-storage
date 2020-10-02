@@ -10,4 +10,5 @@ install:
   - pip install .[test]
 # command to run tests
 script:
+  - pip list
   - pytest # or py.test for Python versions 3.5 and below

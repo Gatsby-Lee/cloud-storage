@@ -2,8 +2,6 @@
 :author: Henley Kuang
 :since: 06/12/2019
 """
-import gzip
-import io
 import logging
 import os
 
@@ -39,9 +37,11 @@ def gcs_api_exception_handler(f):
             return f(*args, **kwargs)
         except google.api_core.exceptions.BadRequest as e:
             raise CloudStorageBadRequestException(str(e))
-        except (google.api_core.exceptions.InternalServerError,
-                google.api_core.exceptions.ServerError,
-                google.api_core.exceptions.ServiceUnavailable) as e:
+        except (
+            google.api_core.exceptions.InternalServerError,
+            google.api_core.exceptions.ServerError,
+            google.api_core.exceptions.ServiceUnavailable,
+        ) as e:
             raise CloudStorageServerErrorException(str(e))
         except google.api_core.exceptions.NotFound as e:
             raise CloudStorageNotFoundException(str(e))
@@ -49,11 +49,11 @@ def gcs_api_exception_handler(f):
             raise CloudStorageInvalidArgumentTypeException(str(e)) from e
         except Exception as e:
             raise CloudStorageUnknownErrorException(str(e)) from e
+
     return decorate
 
 
 class GoogleCloudStorage(object):
-
     def __init__(self):
         self.storage_client = google.cloud.storage.Client()
         self._buckets = {}
@@ -62,12 +62,11 @@ class GoogleCloudStorage(object):
         try:
             return self._buckets[bucket_name]
         except KeyError:
-            self._buckets[bucket_name] = self.storage_client.get_bucket(
-                bucket_name)
+            self._buckets[bucket_name] = self.storage_client.get_bucket(bucket_name)
             return self._buckets[bucket_name]
 
     def list_bucket_names(self):
-        """ Get the list of buckets in GCS
+        """Get the list of buckets in GCS
         Returns:
             list. List of strings of bucket names
 
@@ -79,8 +78,14 @@ class GoogleCloudStorage(object):
         return list(self.storage_client.list_buckets())
 
     @gcs_api_exception_handler
-    def upload_file(self, bucket_name, object_key, source_file_name,
-                    content_type=None, content_encoding=None):
+    def upload_file(
+        self,
+        bucket_name,
+        object_key,
+        source_file_name,
+        content_type=None,
+        content_encoding=None,
+    ):
         """Upload a file to a bucket
 
         Args:
@@ -101,8 +106,9 @@ class GoogleCloudStorage(object):
         blob.upload_from_filename(source_file_name, content_type=content_type)
 
     @gcs_api_exception_handler
-    def upload(self, bucket_name, object_key, buffer,
-               content_type=None, content_encoding=None):
+    def upload(
+        self, bucket_name, object_key, buffer, content_type=None, content_encoding=None
+    ):
         """Upload content to a bucket
 
         Args:
@@ -157,8 +163,9 @@ class GoogleCloudStorage(object):
         Returns:
             None
         """
-        assert(object_key != new_object_key), \
-            "object_key can't be same to new_object_key"
+        assert (
+            object_key != new_object_key
+        ), "object_key can't be same to new_object_key"
 
         bucket = self._get_bucket(bucket_name)
         blob = bucket.blob(object_key)
@@ -166,8 +173,9 @@ class GoogleCloudStorage(object):
         bucket.rename_blob(blob, new_object_key)
 
     @gcs_api_exception_handler
-    def download_gzipped_to_file(self, bucket_name, object_key, destination_file_name,
-                                 do_gunzip=False):
+    def download_gzipped_to_file(
+        self, bucket_name, object_key, destination_file_name, do_gunzip=False
+    ):
         """Download an object to local
 
         Args:
@@ -184,14 +192,10 @@ class GoogleCloudStorage(object):
 
         # blob.download_to_filename(destination_file_name)
         # https://googleapis.github.io/google-cloud-python/latest/_modules/google/cloud/storage/blob.html#Blob.download_to_file
+        raw_download = not do_gunzip
         try:
-            if do_gunzip:
-                with open(destination_file_name, "wb") as file_obj:
-                    blob.download_to_file(file_obj)
-            else:
-                LOGGER.debug('applying gzip compression..')
-                with gzip.open(destination_file_name, "wb") as file_obj:
-                    blob.download_to_file(file_obj)
+            with open(destination_file_name, "wb") as file_obj:
+                blob.download_to_file(file_obj, raw_download=raw_download)
         except resumable_media.DataCorruption:
             # Delete the corrupt downloaded file.
             os.remove(destination_file_name)
@@ -222,20 +226,7 @@ class GoogleCloudStorage(object):
         if do_gunzip:
             return blob.download_as_string()
 
-        LOGGER.debug('applying gzip compression..')
-        # version1:
-        # read all content and apply gzip compression
-        # compressed_blob = gzip.compress(blob.download_as_string())
-
-        # version2:
-        # using stream
-        compressed_blob = None
-        with io.BytesIO() as bytes_buffer:
-            with gzip.GzipFile(fileobj=bytes_buffer, mode='wb') as wgzip_buffer:
-                blob.download_to_file(wgzip_buffer)
-            compressed_blob = bytes_buffer.getvalue()
-
-        return compressed_blob
+        return blob.download_as_string(raw_download=True)
 
     @gcs_api_exception_handler
     def delete(self, bucket_name, object_key):
